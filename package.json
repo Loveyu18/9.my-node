@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "export NODE_ENV=production && node src/env-test.js",
+    "dev": "export NODE_ENV=dev && node src/env-test.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^18.0.0"
+    "@types/node": "^18.0.0",
+    "dotenv": "^16.0.1",
+    "pm2": "^5.2.0"
   }
 }
