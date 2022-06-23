@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "export NODE_ENV=production && node src/env-test.js",
-    "dev": "export NODE_ENV=dev && node src/env-test.js",
+    "dev": "export NODE_ENV=dev && nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,7 +13,10 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^18.0.0",
+    "bootstrap": "^5.1.3",
     "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
     "pm2": "^5.2.0"
   }
 }
