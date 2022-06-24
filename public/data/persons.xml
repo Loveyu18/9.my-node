@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<person>
+    <person>
+        <name>
+        <first>Bob</first>
+        <last>Yu</last>
+        </name>
+        <age>18</age>
+        <data a="aaa" b="bbb">
+    </person>
+    <person name="Bob" age="18" />
+</person>
