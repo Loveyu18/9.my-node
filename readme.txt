@@ -12,6 +12,8 @@ req.files
 
 req.session
 -----------------
+以下不能同時呼叫
+
 res.end()
 
 res.send()
@@ -19,6 +21,8 @@ res.send()
 res.json()
 
 res.render()
+
+res.redirect()
 ------------------
 
 開新專案 npx express-generator -e ，可以生成架構
@@ -45,3 +49,4 @@ RESTful API
 /prosucts/:id
 
 問題思考：購物車的 API 設計
+規格書內容：url、方法、輸入格式、輸出格式

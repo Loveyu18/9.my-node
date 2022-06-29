@@ -5,6 +5,12 @@ const multer = require('multer');
 // const { v4: uuidv4 } = require('uuid')
 const upload = require(__dirname + '/modules/upload-images');
 const session = require('express-session');
+const moment = require('moment-timezone');
+const { months } = require("moment-timezone");
+
+const db = require(__dirname + '/modules/mysql-connect');
+const MysqlStore = require('express-mysql-session')(session);
+const sessionStore = new MysqlStore({}, db);
 
 const app = express();
 
@@ -13,15 +19,15 @@ app.set("view engine", "ejs");
 // 可區分大小寫的路由
 app.set('case sensitive routing', true);
 
-
 // Top-level middlewares
 app.use(session({
     saveUninitialized: false,
     resave: false,
     secret: 'klsdjflkjsfkskjhsdlsdlfhjsdhsdhf',
-    // cookie: {
-    //     maxAge: 1200000, // 20 分鐘，單位毫秒
-    // }
+    store: sessionStore,
+    cookie: {
+        maxAge: 1200000, // 20 分鐘，單位毫秒
+    }
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -85,6 +91,28 @@ app.get(/^\/hi\/?/i, (req, res) => {
 app.get(['/aaa', '/bbb', '/ccc'], (req, res) => {
     res.send({ url: req.url, code: 'array' });
 });
+
+app.get('/try-json', (req, res) => {
+    const data = require(__dirname + '/data/data01');
+    console.log(data);
+    res.locals.rows = data;
+    res.render('try-json');
+});
+
+app.get('/try-moment', (req, res) => {
+    const fm = 'YYYY-MM-DD HH:mm:ss';
+    const m1 = moment();
+    const m2 = moment('2022-02-28');
+
+    res.json({
+        m1: m1.format(fm),
+        m1a: m1.tz('Europe/London').format(fm),
+        m2: m2.format(fm),
+        m2a: m2.tz('Europe/London').format(fm),
+    })
+});
+
+
 
 // routes
 const adminsRouter = require(__dirname + '/routes/admins');
