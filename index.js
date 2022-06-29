@@ -6,11 +6,18 @@ const multer = require('multer');
 const upload = require(__dirname + '/modules/upload-images');
 const session = require('express-session');
 const moment = require('moment-timezone');
-const { months } = require("moment-timezone");
+// const { moment } = require("moment-timezone");
 
 const db = require(__dirname + '/modules/mysql-connect');
 const MysqlStore = require('express-mysql-session')(session);
 const sessionStore = new MysqlStore({}, db);
+
+const {
+    toDateString,
+    toDatetimeString,
+} = require(__dirname + '/modules/date-tools');
+
+
 
 const app = express();
 
@@ -32,7 +39,9 @@ app.use(session({
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use((req, res, next) => {
-    res.locals.bob = '哈囉';
+    // res.locals.bob = '哈囉';
+    res.locals.toDateString = toDateString;
+    res.locals.toDatetimeString = toDatetimeString;
     next();
 });
 //
@@ -131,6 +140,10 @@ app.get('/try-session', (req, res) => {
     });
 })
 //
+
+app.use('/cart_products', require(__dirname + '/routes/cart_products'));
+
+
 
 app.get("/", (req, res) => {
     res.render("main", { name: "Shinder" });
