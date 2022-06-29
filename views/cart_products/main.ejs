@@ -1,111 +1,118 @@
 <!-- 樣板一率用 ejs 副檔名 -->
 <!-- ejs 路徑全部不要用 / 開頭 -->
-<%- include('../parts/html-head') %>
-  <%- include('../parts/html-navbar') %>
+<%- include('../parts/html-head') %> <%- include('../parts/html-navbar') %>
 
-    <div class="container">
+<div class="container">
+  <!-- 收尋功能 -->
+  <div class="row">
+    <div class="col">
+      <form class="d-flex">
+        <input
+          class="form-control me-2"
+          type="date"
+          name="beginDate"
+          value="<%= query.beginDate ? query.beginDate :'2022-06-15'%>"
+        />
+        <input
+          class="form-control me-2"
+          type="date"
+          name="endDate"
+          value="<%= query.endDate ? query.endDate :'2022-06-20'%>"
+        />
 
-      <!-- 收尋功能 -->
-      <div class="row">
-        <div class="col">
-          <div class="col-lg-3">
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" name="search" placeholder="Search"
-                value="<%= locals.query && query.search ? query.search :''%>" />
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-        </div>
-      </div>
-      <!-- 收尋功能 -->
-
-      <div class="row">
-        <div class="col">
-          <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Age</th>
-                <th scope="col">Mobile</th>
-                <th scope="col">Birthday</th>
-                <th scope="col">Address</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% for(let i of rows){ %>
-                <tr>
-                  <td>
-                    <%= i.sid %>
-                  </td>
-                  <td>
-                    <%= i.name %>
-                  </td>
-                  <td>
-                    <%= i.email %>
-                  </td>
-                  <td>
-                    <%= i.mobile %>
-                  </td>
-                  <td>
-                    <%= toDateString(i.birthday) %>
-                  </td>
-                  <td>
-                    <%= i.address %>
-                  </td>
-                </tr>
-                <% } %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <nav aria-label="Page navigation example">
-            <ul class="pagination">
-
-              <!-- 回到第一頁按鈕 -->
-              <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
-                <a class="page-link" href="?page=1">
-                  <i class="fa-solid fa-angles-left"></i>
-                </a>
-              </li>
-              <!-- 回到上頁按鈕 -->
-              <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
-                <a class="page-link" href="?page=<%= page - 1 %>">
-                  <i class="fa-solid fa-angle-left"></i>
-                </a>
-              </li>
-
-
-              <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){%>
-                  <li class="page-item <%= page===i ? 'active' : '' %>">
-                    <a class="page-link" href="?<%= new URLSearchParams({page: i, search: query.search}).toString() %>">
-                      <%= i %>
-                    </a>
-                  </li>
-                  <% } %>
-
-                    <!-- 下一頁按鈕 -->
-                    <li class="page-item <%= page === totalPages ? 'disabled' : '' %>">
-                      <a class="page-link" href="?page=<%= page + 1 %>">
-                        <i class="fa-solid fa-angle-right"></i>
-                      </a>
-                    </li>
-                    <!-- 最後一頁按鈕 -->
-                    <li class="page-item <%= page === totalPages ? 'disabled' : '' %>">
-                      <a class="page-link" href="?page=<%= totalPages %>">
-                        <i class="fa-solid fa-angles-right"></i>
-                      </a>
-                    </li>
-
-
-            </ul>
-          </nav>
-        </div>
-      </div>
+        <input
+          class="form-control me-2"
+          type="search"
+          name="search"
+          placeholder="Search"
+          value="<%= locals.query && query.search ? query.search :''%>"
+        />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
     </div>
+  </div>
+  <!-- 收尋功能 -->
 
-    <%- include('../parts/scripts') %>
-      <%- include('../parts/html-foot') %>
+  <div class="row">
+    <div class="col">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Mobile</th>
+            <th scope="col">Birthday</th>
+            <th scope="col">Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let i of rows){ %>
+          <tr>
+            <td><%= i.sid %></td>
+            <td><%= i.name %></td>
+            <td><%= i.email %></td>
+            <td><%= i.mobile %></td>
+            <td><%= toDateString(i.birthday) %></td>
+            <td><%= i.address %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=1">
+              <i class="fa-solid fa-angles-left"></i>
+            </a>
+          </li>
+          <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= page - 1 %>">
+              <i class="fa-solid fa-angle-left"></i>
+            </a>
+          </li>
+
+          <!--  如果 query.search 有東西才加進來，避免出現 undefine -->
+          <!-- 換頁時維持輸入的查詢條件 -->
+          <% for(let i=page-5; i<=page+5; i++) 
+          if(i>=1 && i<=totalPages){ 
+            const obj={page:i}; 
+            if(query.search){ 
+              obj.search=query.search; 
+            } 
+            if(query.beginDate){ 
+              obj.beginDate=query.beginDate; 
+            } 
+            if(query.endDate){ 
+              obj.endDate=query.endDate; 
+            } 
+
+            const myLink=new URLSearchParams(obj).toString(); %>
+          <li class="page-item <%= page===i ? 'active' : '' %>">
+            <a class="page-link" href="?<%= myLink %>"><%= i %></a>
+          </li>
+          <% } %>
+
+          <li class="page-item <%= page === totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= page + 1 %>">
+              <i class="fa-solid fa-angle-right"></i>
+            </a>
+          </li>
+
+          <li class="page-item <%= page === totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="?page=<%= totalPages %>">
+              <i class="fa-solid fa-angles-right"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<%- include('../parts/scripts') %> <%- include('../parts/html-foot') %>

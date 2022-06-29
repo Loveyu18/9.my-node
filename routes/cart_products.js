@@ -5,6 +5,8 @@ const {
     toDateString,
     toDatetimeString,
 } = require(__dirname + '/../modules/date-tools');
+const moment = require('moment-timezone');
+const upload = require(__dirname + '/../modules/upload-images')
 
 const router = express.Router(); // 建立 router 物件
 
@@ -22,12 +24,29 @@ const getListHandler = async (req, res) => {
     let page = +req.query.page || 1; // 用 + 讓用戶輸入換頁指令時，字串變成數字
 
     let search = req.query.search || '';
+    let beginDate = req.query.beginDate || '';
+    let endDate = req.query.endDate || '';
     let where = ' WHERE 1 ';
     if (search) {
-        where += `AND name LIKE ${db.escape('%'+search+'%')}`; // 用 escape 跳脫
+        where += `AND name LIKE ${db.escape('%' + search + '%')}`; // 用 escape 跳脫
         output.query.search = search;
-        output.showTest = db.escape('%'+search+'%'); // 測試，查看
+        output.showTest = db.escape('%' + search + '%'); // 測試，查看
     }
+    if (beginDate) {
+        const mo = moment(beginDate);
+        if (mo.isValid()) {
+            where += `AND birthday >= '${mo.format('YYYY-MM-DD')}'`; // 用 escape 跳脫
+            output.query.beginDate = mo.format('YYYY-MM-DD');
+        }
+    }
+    if (endDate) {
+        const mo = moment(endDate);
+        if (mo.isValid()) {
+            where += `AND birthday <= '${mo.format('YYYY-MM-DD')}'`; // 用 escape 跳脫
+            output.query.endDate = mo.format('YYYY-MM-DD');
+        }
+    }
+
 
     if (page < 1) {
         output.code = 410;
@@ -60,6 +79,14 @@ const getListHandler = async (req, res) => {
     return output;
     // res.render('cart_products/main', output); // 輸出
 };
+
+router.get('/add', async (req, res) => {
+    res.render('cart_products/add');
+});
+
+router.post('/add', upload.none(), async (req, res) => {
+    res.json(req.body);
+});
 
 router.get('/', async (req, res) => {
     const output = await getListHandler(req, res);
