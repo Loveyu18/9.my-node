@@ -5,7 +5,19 @@
 
     <div class="container">
 
-
+      <!-- 收尋功能 -->
+      <div class="row">
+        <div class="col">
+          <div class="col-lg-3">
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" name="search" placeholder="Search"
+                value="<%= locals.query && query.search ? query.search :''%>" />
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- 收尋功能 -->
 
       <div class="row">
         <div class="col">
@@ -53,7 +65,11 @@
           <nav aria-label="Page navigation example">
             <ul class="pagination">
 
-
+              <li class="page-item <%= page === 1 ? 'disabled' : '' %>">
+                <a class="page-link" href="?page=1">
+                  <i class="fa-solid fa-angles-left"></i>
+                </a>
+              </li>
 
               <li class="page-item"><a class="page-link" href="#">Previous</a></li>
               <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){%>
