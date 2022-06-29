@@ -24,8 +24,9 @@ const getListHandler = async (req, res) => {
     let search = req.query.search || '';
     let where = ' WHERE 1 ';
     if (search) {
-        where += `AND name LIKE '%${search}%'`;
+        where += `AND name LIKE ${db.escape('%'+search+'%')}`; // 用 escape 跳脫
         output.query.search = search;
+        output.showTest = db.escape('%'+search+'%'); // 測試，查看
     }
 
     if (page < 1) {
@@ -48,7 +49,7 @@ const getListHandler = async (req, res) => {
         }
 
         // 有資料才做這個動作，沒資料會出錯，因為超出範圍
-        const sql02 = `SELECT * FROM cart_products ${where} LIMIT ${(page - 1) * output.perPage}, ${output.perPage}`;
+        const sql02 = `SELECT * FROM cart_products ${where} ORDER BY sid DESC LIMIT ${(page - 1) * output.perPage}, ${output.perPage}`;
         const [r2] = await db.query(sql02);
         r2.forEach(el => el.birthday = toDateString(el.birthday)); // 處理時間格式 modules/date-tools.js
         output.rows = r2;
