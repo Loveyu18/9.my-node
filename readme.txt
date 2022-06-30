@@ -50,3 +50,18 @@ RESTful API
 
 問題思考：購物車的 API 設計
 規格書內容：url、方法、輸入格式、輸出格式
+
+
+--------------------
+cart table 購物車資料表
+--------------------
+
+PK
+
+item_type: product, event, ticket
+user_id
+item_id:12
+quantity
+
+created_at
+--------------------

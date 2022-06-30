@@ -6,7 +6,9 @@ const {
     toDatetimeString,
 } = require(__dirname + '/../modules/date-tools');
 const moment = require('moment-timezone');
-const upload = require(__dirname + '/../modules/upload-images')
+const Joi = require('joi');
+const upload = require(__dirname + '/../modules/upload-images');
+
 
 const router = express.Router(); // 建立 router 物件
 
@@ -30,7 +32,6 @@ const getListHandler = async (req, res) => {
     if (search) {
         where += `AND name LIKE ${db.escape('%' + search + '%')}`; // 用 escape 跳脫
         output.query.search = search;
-        output.showTest = db.escape('%' + search + '%'); // 測試，查看
     }
     if (beginDate) {
         const mo = moment(beginDate);
@@ -55,7 +56,7 @@ const getListHandler = async (req, res) => {
     }
 
 
-    const sql01 = `SELECT COUNT(1) totalRows FROM cart_products ${where}`; // totalRows 是別名，可自定義
+    const sql01 = `SELECT COUNT(1) totalRows FROM cart_products ${where} `; // totalRows 是別名，可自定義
     const [[{ totalRows }]] = await db.query(sql01); // 展開三層，用 totalRows 可以拿到總筆數
     let totalPages = 0;
     if (totalRows) {
@@ -85,7 +86,24 @@ router.get('/add', async (req, res) => {
 });
 
 router.post('/add', upload.none(), async (req, res) => {
-    res.json(req.body);
+    const schema = Joi.object({
+        name: Joi.string()
+            .min(3)
+            .required()
+            .label('姓名必填'),
+        age: Joi.string(),
+        mobile: Joi.string(),
+        birthday: Joi.string(),
+        address: Joi.string(),
+    });
+
+    console.log(schema.validate(req.body, { abortEarly: false }));
+
+    const sql = "INSERT INTO `cart_products`( `name`, `age`, `mobile`, `birthday`, `address` , `created_at`) VALUES (?,?,?,?,?, NOW())";
+    const { name, age, mobile, birthday, address } = req.body;
+    const [result] = await db.query(sql, [name, age, mobile, birthday, address]);
+
+    res.json(result);
 });
 
 router.get('/', async (req, res) => {

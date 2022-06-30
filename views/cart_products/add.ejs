@@ -45,6 +45,8 @@
 
     <%- include('../parts/scripts') %>
       <script>
+        const Joi = joi;
+
         function sendForm(event) {
           event.preventDefault();
 
@@ -59,12 +61,60 @@
           }
           console.log(dataObj); // 轉換成物件
 
+          const schema = Joi.object({
+            name: Joi.string()
+              .min(3)
+              .required()
+              .messages({ 'string.empty': '姓名必填' }),
+            age: Joi.string(),
+            mobile: Joi.string(),
+            birthday: Joi.any(),
+            address: Joi.string(),
+          });
+          console.log(schema.validate(dataObj, { abortEarly: false }));
+
+
+
           const usp = new URLSearchParams(fd);
 
+
+          // 三種傳送方法要自行判斷使用哪種 JSON/URLencoded/multipart-formdata
+          // https://medium.com/hobo-engineer/ricky%E7%AD%86%E8%A8%98-postman-%E5%B8%B8%E8%A6%8B%E7%9A%84-content-type-b17a75396668
+
+          /*
+          // 轉換 JSON
+          fetch('', {
+            method: 'POST',
+            body: JSON.stringify(dataObj),
+            headers: {
+              'Content-type': 'application/json'
+            }
+          })
+            .then(r => r.json())
+            .then(obj => {
+              console.log(obj)
+            })
+            */
+
+
+          /*
           // 轉換 urlencoded
           console.log(usp.toString());
+          fetch('', {
+            method: 'POST',
+            body: usp.toString()
+            headers: {
+              'Content-type': 'application/x-www-form-urlencoded'
+            }
+          })
+            .then(r => r.json())
+            .then(obj => {
+              console.log(obj)
+            })
+            */
 
 
+          // multipart-formdata
           fetch('', {
             method: 'POST',
             body: fd
@@ -73,7 +123,9 @@
             .then(obj => {
               console.log(obj)
             })
+
         }
+
       </script>
 
       <%- include('../parts/html-foot') %>
