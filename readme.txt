@@ -65,7 +65,20 @@ quantity
 
 created_at
 --------------------
+----------------
+CREATE TABLE `carts` (
+  `sid` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE `carts`
+  ADD PRIMARY KEY (`sid`);
+
+ALTER TABLE `carts`
+  MODIFY `sid` int(11) NOT NULL AUTO_INCREMENT;
 
  ------------------------------------
  同源政策 (Same-origin policy)

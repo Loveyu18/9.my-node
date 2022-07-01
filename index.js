@@ -60,6 +60,8 @@ app.use((req, res, next) => {
 });
 //
 
+app.use('/carts', require(__dirname + '/routes/carts'));
+
 app.get('/try-qs', (req, res) => {
     res.json(req.query);
 });
