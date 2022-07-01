@@ -6,7 +6,7 @@ const multer = require('multer');
 const upload = require(__dirname + '/modules/upload-images');
 const session = require('express-session');
 const moment = require('moment-timezone');
-// const { moment } = require("moment-timezone");
+const axios = require('axios');
 
 const db = require(__dirname + '/modules/mysql-connect');
 const MysqlStore = require('express-mysql-session')(session);
@@ -143,6 +143,14 @@ app.get('/try-session', (req, res) => {
 
 app.use('/cart_products', require(__dirname + '/routes/cart_products'));
 
+
+app.route('/login')
+    .get(async(req, res) => {
+        res.render('login');
+    })
+    .post(async(req, res) => {
+        res.json(req.body)
+    });
 
 
 app.get("/", (req, res) => {
