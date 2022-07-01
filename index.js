@@ -13,6 +13,17 @@ const db = require(__dirname + '/modules/mysql-connect');
 const MysqlStore = require('express-mysql-session')(session);
 const sessionStore = new MysqlStore({}, db);
 
+const cors = require('cors')
+const corsOptions = {
+    credentials: true,
+    origin: (origin, cb) => {
+        console.log({ origin });
+        cb(null, true);
+    }
+};
+
+
+
 const {
     toDateString,
     toDatetimeString,
@@ -28,6 +39,7 @@ app.set("view engine", "ejs");
 app.set('case sensitive routing', true);
 
 // Top-level middlewares
+app.use(cors(corsOptions));
 app.use(session({
     saveUninitialized: false,
     resave: false,
