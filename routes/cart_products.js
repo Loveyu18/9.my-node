@@ -81,11 +81,26 @@ const getListHandler = async (req, res) => {
     // res.render('cart_products/main', output); // 輸出
 };
 
+router.use((req, res, next)=>{
+        /*
+    if(! req.session.admin){
+        return res.redirect('/');
+    }
+    */
+    next();
+})
+
 router.get('/add', async (req, res) => {
-    res.render('cart_products/add');
+    if(! req.session.admin){
+         return res.redirect('/');
+    }
+   res.render('cart_products/add');
 });
 
 router.post('/add', upload.none(), async (req, res) => {
+        if(! req.session.admin){
+                return res.json({success: false, error: '請先登入'});
+            }
     const schema = Joi.object({
         name: Joi.string()
             .min(3)
@@ -115,7 +130,11 @@ router.get('/', async (req, res) => {
         case 420:
             return res.redirect(`?page=${output.totalPages}`);
     }
-    res.render('cart_products/main', output);
+        if(! req.session.admin){
+                res.render('cart_products/main-noadmin', output);
+            } else {
+                res.render('cart_products/main', output);
+            }
 });
 router.get('/api', async (req, res) => {
     const output = await getListHandler(req, res);
